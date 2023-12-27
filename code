@@ -1,0 +1,72 @@
+class Cause:
+   def __init__(self, name, amount_gathered):
+       self.name = name
+       self.amount_gathered = amount_gathered
+
+
+def present_causes(causes):
+   print(f"{'Cause Number':<25}{'Cause Name':<25}")
+   for i, cause in enumerate(causes, start=1):
+       print(f"{i:<25}{cause.name:<25}")
+
+
+def view_totals(causes):
+   print("\nCause Totals (Highest to Lowest):\n")
+   print(f"{'Cause Name':<25}{'Amount Gathered':<25}")
+
+   # Sort causes based on amount gathered in descending order
+   sorted_causes = sorted(causes, key=lambda x: x.amount_gathered, reverse=True)
+   for cause in sorted_causes:
+       print(f"{cause.name:<25}{'$':<25}{cause.amount_gathered:.2f}")
+
+
+def facilitate_giving():
+   # Create Cause objects
+   causes = [Cause("Cause 1", 0.0), Cause("Cause 2", 0.0), Cause("Cause 3", 0.0)]
+   bill_amount, contribution, selection = 0.0, 0.0, 0
+   overall_total = 0.0
+
+   print("Welcome to the Giving Initiative!\n")
+
+   # Collect names for each cause
+   for cause in causes:
+       cause.name = input(f"Enter the name of {cause.name}: ")
+
+   while True:
+       print()
+       present_causes(causes)
+
+       # User input for cause selection
+       selection = int(input("\nChoose a cause to support (1, 2, 3) or enter -1 to view totals: "))
+
+       if selection == -1:
+           print()
+           view_totals(causes)
+
+           # Calculate overall total and contribution from overall total
+           overall_total = sum(cause.amount_gathered for cause in causes)
+           contribution_from_total = 0.01 * overall_total
+
+           print(f"\nGRAND TOTAL GATHERED FOR CAUSES: ${overall_total:.2f}")
+           print(
+               f"Your contribution also supports the greater good. From the overall amount, ${contribution_from_total:.2f} will be distributed equally among all causes.\n")
+
+           break
+
+       # Validate and process user selection
+       if not 1 <= selection <= 3:
+           print("Invalid selection. Please choose 1, 2, 3, or -1 to view totals.\n")
+           continue
+
+       # Collect user bill amount and calculate contribution
+       bill_amount = float(input("Enter your bill amount: $"))
+       contribution = 0.01 * bill_amount
+
+       # Update cause's total amount gathered
+       causes[selection - 1].amount_gathered += contribution
+
+       print(f"\nYour generosity is inspiring! Thank you for your contribution of ${contribution:.2f} to {causes[selection - 1].name}.\n")
+
+
+if __name__ == "__main__":
+   facilitate_giving()
